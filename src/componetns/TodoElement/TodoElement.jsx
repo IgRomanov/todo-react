@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const TodoElement = ({name, handleStatusChange, taskId, status, setTasks, tasks, currentFilterStatus, setFiltredTasks, filtredTasks, setLastOperation}) => {
+const TodoElement = ({name, handleStatusChange, taskId, status, setTasks, tasks, currentFilterStatus, setFiltredTasks, setLastOperation}) => {
     const [isDisabled, setDisabled] = useState(true);
     const [changedName, setChangedName] = useState(name);
 
@@ -28,12 +28,14 @@ const TodoElement = ({name, handleStatusChange, taskId, status, setTasks, tasks,
     };
 
     const handleDeleteClick = () => {
-        if (currentFilterStatus) {
-            setFiltredTasks(filtredTasks.filter(task => task.id !== taskId));
-        }
         const remainingTasks = tasks.filter(task => task.id !== taskId);
+        if (currentFilterStatus) {
+            setFiltredTasks(remainingTasks);
+        }
+
         setTasks(remainingTasks);
-        if (remainingTasks.length===0) {
+
+        if (remainingTasks.length === 0) {
             localStorage.clear();
         }
         setLastOperation('Task deleted');

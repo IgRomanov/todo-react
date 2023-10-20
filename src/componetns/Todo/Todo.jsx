@@ -83,6 +83,7 @@ const Todo = () => {
     const handleAllClick = () => {
         setCurrentFilterStatus(false);
     };
+
     useEffect(() => {
         setActiveTaskCount(tasks.filter(task => !task.status).length);
         if (tasks.length !== 0) {
@@ -96,6 +97,7 @@ const Todo = () => {
             setTasks(JSON.parse(localTasks));
         };
     },[]);
+
     return (
         <div className="todo">
             <h3 className="todo__title">todos</h3>
@@ -135,7 +137,6 @@ const Todo = () => {
                                 tasks={tasks}
                                 currentFilterStatus={currentFilterStatus}
                                 setFiltredTasks={setFiltredTasks}
-                                filtredTasks={filtredTasks}
                                 setLastOperation={setLastOperation}
                             />
                                 
