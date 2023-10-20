@@ -1,0 +1,146 @@
+.todo {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.todo__title {
+    font-size: 55px;
+    text-align: center;
+    color: rgb(206, 186, 186);
+    margin-bottom: 15px;
+}
+
+.todo__fields {
+    border: 1px solid rgb(211, 211, 211);
+    border-top: none;
+    background-color: rgb(245, 245, 245);
+    box-shadow: 0 0 2px rgb(184, 184, 184), 0 10px 1px -5px rgb(255, 255, 255), 0 10px 0 -5px rgb(85, 85, 85), 0 16px 0 -7px rgb(255, 255, 255);
+}
+
+.todo__params {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    padding: 9px 6px;
+}
+
+.todo__arrow {
+    padding: 0;
+    border: none;
+    width: 21px;
+    height: 21px;
+    transition: transform ease-in-out .4s;
+    background-color: rgb(245, 245, 245);
+    background-image: url(../../images/arrowDown.svg);
+    background-size: cover;
+    
+}
+
+.todo__list-element {
+    display: flex;
+    border-bottom: 1px solid rgb(211, 211, 211);
+    align-items: center;
+    height: 45px;
+    padding-left: 5px;
+    padding-right: 5px;
+    justify-content: space-between;
+    
+}
+
+.todo__list-container {
+   display: flex;
+   gap: 8px;
+}
+
+.todo__btn {
+    border: none;
+    padding: 0;
+    background-color: transparent;
+}
+
+.todo__btn_pointer {
+    cursor: pointer;
+
+}
+
+.todo__btn_border {
+    border: 1px solid grey;
+    border-radius: 3px;
+    padding: 1px 4px;
+}
+
+.todo__task-label {
+    display: flex;
+    padding-left: 5px;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgb(211, 211, 211)
+}
+
+.todo__task-label > .todo__arrow:hover {
+    transform: scale(1.1);
+}
+
+.todo__task-input {
+    outline: none;
+    padding: 0;
+    border: none;
+    height: 45px;
+    background-color: rgb(245, 245, 245);
+    flex-grow: 1;
+    font-style: italic;
+}
+
+.todo__task-input::placeholder {
+    color: rgb(206, 206, 206);
+}
+
+.todo__checkbox {
+    width: 21px;
+    height: 21px;
+    background-color: white;
+    border-radius: 50%;
+    border: 1px solid rgb(218, 218, 218);
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.todo__checkbox_green {
+    padding: 1px;
+    background: center no-repeat url(../../images/checkmarkGreen.svg);
+}
+
+.todo__buttons-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.todo__text-grey {
+    color: rgb(206, 206, 206);
+}
+
+.task__name {
+    outline: none;
+    border: none;
+    background-color: rgb(245, 245, 245);
+    width: 100%;
+}
+
+.todo__btn-delete {
+    border: none;
+    background: url(../../images/cross.svg) no-repeat;
+    height: 21px;
+    width: 21px;
+    transition: transform ease-in-out .4s;
+}
+
+.todo__btn-delete:hover {
+    transform: rotate(30deg);
+}
+
+.todo__status-text {
+    min-width: 95px;
+}
