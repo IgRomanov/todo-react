@@ -138,6 +138,7 @@ const Todo = () => {
                                 currentFilterStatus={currentFilterStatus}
                                 setFiltredTasks={setFiltredTasks}
                                 setLastOperation={setLastOperation}
+                                filtredTasks={filtredTasks}
                             />
                                 
                         )

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const TodoElement = ({name, handleStatusChange, taskId, status, setTasks, tasks, currentFilterStatus, setFiltredTasks, setLastOperation}) => {
+const TodoElement = ({name, handleStatusChange, taskId, status, setTasks, tasks, currentFilterStatus, setFiltredTasks, setLastOperation, filtredTasks}) => {
     const [isDisabled, setDisabled] = useState(true);
     const [changedName, setChangedName] = useState(name);
 
@@ -28,11 +28,12 @@ const TodoElement = ({name, handleStatusChange, taskId, status, setTasks, tasks,
     };
 
     const handleDeleteClick = () => {
-        const remainingTasks = tasks.filter(task => task.id !== taskId);
+        let remainingTasks;
         if (currentFilterStatus) {
+            remainingTasks = filtredTasks.filter(task => task.id !== taskId);
             setFiltredTasks(remainingTasks);
         }
-
+        remainingTasks = tasks.filter(task => task.id !== taskId);
         setTasks(remainingTasks);
 
         if (remainingTasks.length === 0) {
