@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import TodoElement from "../TodoElement/TodoElement";
+import { useDispatch, useSelector } from "react-redux";
+import { setTasks, changeTaskStatus, filterTaskByStatus, clearFiltredTask } from "../../store/slices/tasksSlice";
+import { taskAction } from "../../utils/const";
 
 const Todo = () => {
-    const [tasks, setTasks] = useState([]);
-    const [filtredTasks, setFiltredTasks] = useState([]);
+    const tasks = useSelector((state) => state.tasks.value);
+    const filtredTasks = useSelector((state) => state.tasks.filtred);
+    const dispatch = useDispatch();
     const [currentFilterStatus, setCurrentFilterStatus] = useState(false);
     const [taskName, setTaskName] = useState('');
     const [activeTaskCount, setActiveTaskCount] = useState(0);
     const [lastOperation, setLastOperation] = useState('');
+    const { TASK_ADDED_MESSAGE, TASK_STATUS_MESSAGE } = taskAction;
 
     //Появились ошибки после добавления локального хранилища (одинаковые id), поэтому добавил такую функцию, которая генерирует уникальные id
     const setId = (taskLength) => {                       
@@ -16,7 +21,7 @@ const Todo = () => {
         } else {
             return taskLength;
         }
-    }
+    };
     
     const handleTaskNameChange = (e) => {
         setTaskName(e.target.value);
@@ -25,52 +30,26 @@ const Todo = () => {
     const handleTaskSubmit = (e) => {
         e.preventDefault();
         if (taskName) {
-            setTasks([...tasks, {taskName, id: setId(tasks.length), status: false}]);
+            dispatch(setTasks([...tasks, {taskName, id: setId(tasks.length), status: false}]));
             setTaskName('');
         }
-        setLastOperation('Task is added');
+        setLastOperation(TASK_ADDED_MESSAGE);
     };
 
     const handleStatusChange = (e) => {
-        const taskStatus = tasks.find(task => task.id === Number(e.target.value)).status;
-        if (taskStatus) {
-            const currentTasks = tasks.map((task) => {
-                if (task.id === Number(e.target.value)) {
-                    task.status=false;
-                }
-                return task;
-            });
-            if (currentFilterStatus) {
-                setFiltredTasks(currentTasks);
-                filterByStatus(true);
-            } else {
-                setTasks(currentTasks);
-            }
-        } else {
-            const currentTasks = tasks.map((task) => {
-                if (task.id === Number(e.target.value)) {
-                    task.status=true;
-                }
-                return task;
-            });
-            if (currentFilterStatus) {
-                setFiltredTasks(currentTasks);
-                filterByStatus(false);
-            } else {
-                setTasks(currentTasks);
-            }
-        }
-        setLastOperation('Status changed');
+        const id = Number(e.target.value);
+        dispatch(changeTaskStatus(id));
+        setLastOperation(TASK_STATUS_MESSAGE);
     };
 
     const filterByStatus = (status) => {
         setCurrentFilterStatus(true);
         if (status) {
-            setFiltredTasks(tasks.filter(task => task.status === true));
+            dispatch(filterTaskByStatus(false));
         } else {
-            setFiltredTasks(tasks.filter(task => task.status === false));
+            dispatch(filterTaskByStatus(true));
         }
-    }
+    };
 
     const handleActiveClick = () => {
         filterByStatus(false);
@@ -82,6 +61,7 @@ const Todo = () => {
 
     const handleAllClick = () => {
         setCurrentFilterStatus(false);
+        dispatch(clearFiltredTask());
     };
 
     useEffect(() => {
@@ -89,14 +69,14 @@ const Todo = () => {
         if (tasks.length !== 0) {
             localStorage.setItem('tasks', JSON.stringify(tasks));
         };
-    },[tasks, filtredTasks]);
+    }, [tasks]);
 
     useEffect(() => {
         const localTasks = localStorage.getItem('tasks');
         if (localTasks) {
-            setTasks(JSON.parse(localTasks));
+            dispatch(setTasks(JSON.parse(localTasks)));
         };
-    },[]);
+    }, []);
 
     return (
         <div className="todo">
@@ -111,37 +91,19 @@ const Todo = () => {
                     </form>
                 <div className="todo__list">
                     { 
-                    !currentFilterStatus ?
-                        tasks.map(task =>
+                
+                        (currentFilterStatus ? filtredTasks : tasks).map(task =>
                             <TodoElement 
                                 key={task.id} 
                                 name={task.taskName} 
                                 handleStatusChange={handleStatusChange}
                                 taskId={task.id}
                                 status={task.status}
-                                setTasks={setTasks}
-                                tasks={tasks}
                                 setLastOperation={setLastOperation}
                             />
                                 
                         )
-                    : 
-                        filtredTasks.map(task =>
-                            <TodoElement 
-                                key={task.id} 
-                                name={task.taskName} 
-                                handleStatusChange={handleStatusChange}
-                                taskId={task.id}
-                                status={task.status}
-                                setTasks={setTasks}
-                                tasks={tasks}
-                                currentFilterStatus={currentFilterStatus}
-                                setFiltredTasks={setFiltredTasks}
-                                setLastOperation={setLastOperation}
-                                filtredTasks={filtredTasks}
-                            />
-                                
-                        )
+               
                     }
                 </div>
                 <div className="todo__params">

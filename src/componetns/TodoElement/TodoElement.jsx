@@ -1,8 +1,16 @@
 import { useState } from "react";
+import { deleteTask } from "../../store/slices/tasksSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setTasks, changeTaskName } from "../../store/slices/tasksSlice";
+import { taskAction } from "../../utils/const";
 
-const TodoElement = ({name, handleStatusChange, taskId, status, setTasks, tasks, currentFilterStatus, setFiltredTasks, setLastOperation, filtredTasks}) => {
+
+const TodoElement = ({name, handleStatusChange, taskId, status, setLastOperation}) => {
+    const tasks = useSelector((state) => state.tasks.value);
     const [isDisabled, setDisabled] = useState(true);
     const [changedName, setChangedName] = useState(name);
+    const dispatch = useDispatch();
+    const { TASK_CHANGED_MESSAGE, TASK_DELETED_MESSAGE } = taskAction;
 
     const handleChangeDisabled = (e) => {
         setDisabled(false);
@@ -16,31 +24,21 @@ const TodoElement = ({name, handleStatusChange, taskId, status, setTasks, tasks,
 
     const handleSubmitChange = (e) => {
         e.preventDefault();
-        const changedTasks = tasks.map((task) => {
-            if (task.id === taskId) {
-                task.taskName = changedName;
-            }
-            return task;
-        })
-        setTasks(changedTasks);
+        dispatch(changeTaskName({id: taskId, taskName: changedName}));
         setDisabled(true);
-        setLastOperation('Clear completed');
+        setLastOperation(TASK_CHANGED_MESSAGE);
     };
 
     const handleDeleteClick = () => {
+        dispatch(deleteTask(taskId));
         let remainingTasks;
-        if (currentFilterStatus) {
-            remainingTasks = filtredTasks.filter(task => task.id !== taskId);
-            setFiltredTasks(remainingTasks);
-        }
         remainingTasks = tasks.filter(task => task.id !== taskId);
-        setTasks(remainingTasks);
-
+        dispatch(setTasks(remainingTasks));
         if (remainingTasks.length === 0) {
             localStorage.clear();
         }
-        setLastOperation('Task deleted');
-    }
+        setLastOperation(TASK_DELETED_MESSAGE);
+    };
 
     return (
         <div className="todo__list-element">
