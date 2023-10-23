@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import TodoElement from "../TodoElement/TodoElement";
 import { useDispatch, useSelector } from "react-redux";
-import { setTasks, changeTaskStatus, filterTaskByStatus, clearFiltredTask } from "../../store/slices/tasksSlice";
-import { taskAction } from "../../utils/const";
+import { setTasks, changeTaskStatus, filterTaskByStatus, clearFiltredTasks, deleteTasks } from "../../store/slices/tasksSlice";
 
 const Todo = () => {
     const tasks = useSelector((state) => state.tasks.value);
@@ -11,8 +10,7 @@ const Todo = () => {
     const [currentFilterStatus, setCurrentFilterStatus] = useState(false);
     const [taskName, setTaskName] = useState('');
     const [activeTaskCount, setActiveTaskCount] = useState(0);
-    const [lastOperation, setLastOperation] = useState('');
-    const { TASK_ADDED_MESSAGE, TASK_STATUS_MESSAGE } = taskAction;
+    const [activeBtn, setActiveBtn] = useState('');
 
     //Появились ошибки после добавления локального хранилища (одинаковые id), поэтому добавил такую функцию, которая генерирует уникальные id
     const setId = (taskLength) => {                       
@@ -33,13 +31,11 @@ const Todo = () => {
             dispatch(setTasks([...tasks, {taskName, id: setId(tasks.length), status: false}]));
             setTaskName('');
         }
-        setLastOperation(TASK_ADDED_MESSAGE);
     };
 
     const handleStatusChange = (e) => {
         const id = Number(e.target.value);
         dispatch(changeTaskStatus(id));
-        setLastOperation(TASK_STATUS_MESSAGE);
     };
 
     const filterByStatus = (status) => {
@@ -53,16 +49,25 @@ const Todo = () => {
 
     const handleActiveClick = () => {
         filterByStatus(false);
+        setActiveBtn('active');
     };
 
     const handleCompletedClick = () => {
         filterByStatus(true);
+        setActiveBtn('completed');
     };
 
     const handleAllClick = () => {
+        setActiveBtn('all');
         setCurrentFilterStatus(false);
-        dispatch(clearFiltredTask());
+        dispatch(clearFiltredTasks());
     };
+
+    const handleDeleteAllClick = () => {
+        dispatch(deleteTasks());
+        dispatch(clearFiltredTasks());
+        localStorage.removeItem('tasks');
+    }
 
     useEffect(() => {
         setActiveTaskCount(tasks.filter(task => !task.status).length);
@@ -72,6 +77,7 @@ const Todo = () => {
     }, [tasks]);
 
     useEffect(() => {
+        setActiveBtn('all');
         const localTasks = localStorage.getItem('tasks');
         if (localTasks) {
             dispatch(setTasks(JSON.parse(localTasks)));
@@ -81,9 +87,8 @@ const Todo = () => {
     return (
         <div className="todo">
             <h3 className="todo__title">todos</h3>
-            <div className="todo__fields">
-                    
-                    <form onSubmit={handleTaskSubmit} id="taskAdd">
+            <div className="todo__fields"> 
+                    <form onSubmit={handleTaskSubmit} id="taskAdd" className="form__field">
                         <label className="todo__task-label">
                             <button className="todo__arrow todo__btn_pointer"/>
                             <input className="todo__task-input" placeholder="What needs to be done?" onChange={handleTaskNameChange} value={taskName}></input>
@@ -99,7 +104,6 @@ const Todo = () => {
                                 handleStatusChange={handleStatusChange}
                                 taskId={task.id}
                                 status={task.status}
-                                setLastOperation={setLastOperation}
                             />
                                 
                         )
@@ -109,11 +113,11 @@ const Todo = () => {
                 <div className="todo__params">
                     <span className="todo__left">{activeTaskCount > 1 ? `${activeTaskCount} items left` :  `${activeTaskCount} item left`}</span>
                     <div className="todo__buttons-container">
-                        <button className="todo__btn todo__btn_pointer todo__btn_border" onClick={handleAllClick}>All</button>
-                        <button className="todo__btn todo__btn_pointer" onClick={handleActiveClick}>Active</button>
-                        <button className="todo__btn todo__btn_pointer" onClick={handleCompletedClick}>Completed</button>
+                        <button className={`todo__btn todo__btn_pointer ${activeBtn === 'all' && 'todo__btn_border'}`} onClick={handleAllClick}>All</button>
+                        <button className={`todo__btn todo__btn_pointer ${activeBtn === 'active' && 'todo__btn_border'}`} onClick={handleActiveClick}>Active</button>
+                        <button className={`todo__btn todo__btn_pointer ${activeBtn === 'completed' && 'todo__btn_border'}`} onClick={handleCompletedClick}>Completed</button>
                     </div>
-                    <span className="todo__status-text">{lastOperation}</span>
+                    <button className="todo__btn_pointer todo__clear-btn" onClick={handleDeleteAllClick}>Clear completed</button>
                 </div>
             </div>
         </div>

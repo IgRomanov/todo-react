@@ -54,21 +54,26 @@ export const tasksSlice = createSlice({
             state.value = state.value.filter(task => task.id !== action.payload);
         },
 
+        deleteTasks: (state) => {
+            state.value = [];
+        },
+
         filterTaskByStatus: (state, action) => {
             state.filtred = state.value.filter(task => task.status !== action.payload);
         },
 
-        clearFiltredTask: (state) => {
+        clearFiltredTasks: (state) => {
             state.filtred = [];
         }
     }
 });
 
 export const { 
-    setTasks, 
+    setTasks,
+    deleteTasks, 
     deleteTask, 
     filterTaskByStatus, 
-    clearFiltredTask, 
+    clearFiltredTasks, 
     changeTaskStatus, 
     changeTaskName,
 } = tasksSlice.actions;

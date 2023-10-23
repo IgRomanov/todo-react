@@ -44,24 +44,27 @@
 
 .todo__list-element {
     display: flex;
+    justify-content: space-between;
     border-bottom: 1px solid rgb(211, 211, 211);
     align-items: center;
     height: 45px;
     padding-left: 5px;
     padding-right: 5px;
-    justify-content: space-between;
-    
+    text-overflow: ellipsis;
 }
 
 .todo__list-container {
    display: flex;
    gap: 8px;
+   max-width: 90%;
 }
 
 .todo__btn {
-    border: none;
+    border: 1px solid transparent;
     padding: 0;
     background-color: transparent;
+    border-radius: 3px;
+    padding: 1px 4px;
 }
 
 .todo__btn_pointer {
@@ -71,8 +74,6 @@
 
 .todo__btn_border {
     border: 1px solid grey;
-    border-radius: 3px;
-    padding: 1px 4px;
 }
 
 .todo__task-label {
@@ -126,6 +127,9 @@
 .todo__text-grey {
     color: rgb(206, 206, 206);
     font-size: 16px;
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .task__name {
@@ -134,7 +138,7 @@
     padding: 0;
     background-color: rgb(245, 245, 245);
     display: block;
-    width: 100%;
+    max-width: 90%;
 }
 
 .todo__btn-delete {
@@ -149,6 +153,13 @@
     transform: rotate(30deg);
 }
 
-.todo__status-text {
+.todo__clear-btn {
     min-width: 95px;
+    border: none;
+}
+
+.form__field {
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
