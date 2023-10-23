@@ -101,15 +101,23 @@ const Todo = () => {
     }, [activeBtn]);
 
     useEffect(() => {
-        axios.get('https://jsonplaceholder.typicode.com/todos')
-            .then((res) => {
-                dispatch(setTasks(res.data));
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, [])
+        setActiveTaskCount(tasks.filter(task => !task.completed).length);
+        if (tasks.length !== 0) {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        };
+    }, [tasks]);
 
+    useEffect(() => {
+        axios.get('https://jsonplaceholder.typicode.com/todos')
+        .then((res) => {
+            dispatch(setTasks(res.data));
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+        
+    }, []);
+    
     return (
         <div className="todo">
             <h3 className="todo__title">todos</h3>
