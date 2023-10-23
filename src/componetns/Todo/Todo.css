@@ -37,6 +37,11 @@
     
 }
 
+.todo__list {
+    max-height: 50vh;
+    overflow-y: scroll;
+}
+
 .todo__list-element {
     display: flex;
     border-bottom: 1px solid rgb(211, 211, 211);
