@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { deleteTask } from "../../store/slices/tasksSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setTasks, changeTaskName } from "../../store/slices/tasksSlice";
@@ -19,6 +19,7 @@ const TodoElement = ({name, handleStatusChange, taskId, status}) => {
     };
 
     const handleSubmitChange = (e) => {
+        setDisabled(true)
         e.preventDefault();
         dispatch(changeTaskName({id: taskId, taskName: changedName}));
         setDisabled(true);
@@ -32,6 +33,11 @@ const TodoElement = ({name, handleStatusChange, taskId, status}) => {
         if (remainingTasks.length === 0) {
             localStorage.clear();
         }
+    };
+
+    const clearSubmitData = () => {
+        setDisabled(true);
+        setChangedName(name);
     };
 
     return (
@@ -49,7 +55,7 @@ const TodoElement = ({name, handleStatusChange, taskId, status}) => {
                     <div className="todo__list-container">
                         <input className="todo__checkbox" type="checkbox" defaultChecked={status} onChange={handleStatusChange} value={taskId}></input>
                         <form className="form__field" onDoubleClick={handleChangeDisabled} onSubmit={handleSubmitChange} id="taskChange">
-                            <input className="task__name" spellCheck="false" onBlur={_ => setDisabled(true)} onChange={handleTaskChange} disabled={isDisabled} value={isDisabled ? name : changedName}></input>
+                            <input className="task__name" spellCheck="false" onBlur={clearSubmitData} onChange={handleTaskChange} disabled={isDisabled} value={isDisabled ? name : changedName}></input>
                         </form>
                     </div>
                     <button className="todo__btn-delete todo__btn_pointer" onClick={handleDeleteClick}></button>
