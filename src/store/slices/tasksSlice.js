@@ -20,10 +20,10 @@ export const tasksSlice = createSlice({
             })
         },
 
-        changeTaskName: (state, action) => {       
+        changeTaskName: (state, action) => {
             state.value = state.value.map((task) => {
                 if (task.id === action.payload.id) {
-                    task.taskName = action.payload.taskName;
+                    task.title = action.payload.taskName;
                 }
                 return task;
             })
@@ -33,9 +33,7 @@ export const tasksSlice = createSlice({
             state.value = state.value.filter(task => task.id !== action.payload);
         },
 
-        deleteTasks: (state) => {
-            state.value = [];
-        },
+    
 
     }
 });
