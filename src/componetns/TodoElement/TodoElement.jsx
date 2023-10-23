@@ -14,8 +14,6 @@ const TodoElement = ({name, handleStatusChange, taskId, status, setLastOperation
 
     const handleChangeDisabled = (e) => {
         setDisabled(false);
-        e.target.focus();
-        e.target.selectionStart = name.length;  
     };
 
     const handleTaskChange = (e) => {
