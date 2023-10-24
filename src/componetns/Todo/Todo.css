@@ -159,6 +159,7 @@
 .todo__clear-btn {
     min-width: 95px;
     border: none;
+    background-color: transparent;
 }
 
 .form__field {

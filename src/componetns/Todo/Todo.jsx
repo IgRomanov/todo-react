@@ -82,6 +82,10 @@ const Todo = () => {
         if (localTasks) {
             dispatch(setTasks(JSON.parse(localTasks)));
         };
+        return () => {
+            console.log('sfsf')
+            localStorage.clear()
+        }
     }, []);
 
     return (
