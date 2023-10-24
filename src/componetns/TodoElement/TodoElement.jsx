@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { deleteTask } from "../../store/slices/tasksSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { setTasks, changeTaskName } from "../../store/slices/tasksSlice";
+import { useDispatch } from "react-redux";
+import { changeTaskName } from "../../store/slices/tasksSlice";
 
 
 const TodoElement = ({name, handleStatusChange, taskId, status}) => {
-    const tasks = useSelector((state) => state.tasks.value);
     const [isDisabled, setDisabled] = useState(true);
     const [changedName, setChangedName] = useState(name);
     const dispatch = useDispatch();
@@ -27,12 +26,6 @@ const TodoElement = ({name, handleStatusChange, taskId, status}) => {
 
     const handleDeleteClick = () => {
         dispatch(deleteTask(taskId));
-        let remainingTasks;
-        remainingTasks = tasks.filter(task => task.id !== taskId);
-        dispatch(setTasks(remainingTasks));
-        if (remainingTasks.length === 0) {
-            localStorage.clear();
-        }
     };
 
     const clearSubmitData = () => {
