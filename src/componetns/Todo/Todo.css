@@ -98,6 +98,8 @@
     background-color: rgb(245, 245, 245);
     flex-grow: 1;
     font-style: italic;
+    max-width: 79%;
+    text-overflow: ellipsis;
 }
 
 .todo__task-input::placeholder {
