@@ -21,44 +21,40 @@ const Todo = () => {
         let currentId = uuidv4();
         e.preventDefault();
         if (taskName) {
-            const id = setId(tasks.length);
             axios.post(`https://jsonplaceholder.typicode.com/todos`, {
                 userId: 1,
-                id: id,
+                id: currentId,
                 title: taskName,
                 completed: false,
             })
-                .then(() => {
-                    dispatch(setTasks([{ title: taskName, id: currentId, completed: false }, ...tasks]));
-                    setTaskName('');
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-        }
-    };
-
-    const handleStatusChange = (e) => {
-        const id = e.target.value;
-        axios.patch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
-            completed: !currentStatus
-        })
-            .then((res) => {
-                dispatch(changeTaskStatus(id));
+            .then(() => {
+                dispatch(setTasks([{ title: taskName, id: currentId, completed: false }, ...tasks]));
+                setCurrentTasks([{title: taskName, id: currentId, completed: false }, ...currentTasks]);
+                setTaskName('');
             })
             .catch((err) => {
                 console.log(err);
             })
+        }
     };
 
-    const filterByStatus = (status) => {
-        setCurrentFilterStatus(true);
-        if (status) {
-            dispatch(filterTaskByStatus(false));
-        } else {
-            dispatch(filterTaskByStatus(true));
-        }
-
+    const handleStatusChange = (e) => {
+        const id = Number(e.target.value);
+        const currentStatus = tasks.find(task => task.id === id).completed;
+            axios.patch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
+                completed: !currentStatus
+            })
+            .then((res) => {
+                dispatch(changeTaskStatus(id));
+                if (activeBtn === 'active') {
+                    setCurrentTasks(currentTasks.filter(task => task.completed === false));
+                } else if (activeBtn === 'completed') {
+                    setCurrentTasks(currentTasks.filter(task => task.completed === true));
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     };
 
     const handleActiveClick = () => {
@@ -79,11 +75,11 @@ const Todo = () => {
     }
 
     useEffect(() => {
-        setActiveTaskCount(tasks.filter(task => !task.status).length);
+        setActiveTaskCount(tasks.filter(task => !task.completed).length);
         if (activeBtn === 'active') {
-            setCurrentTasks(tasks.filter(task => task.status === false));
+            setCurrentTasks(tasks.filter(task => task.completed === false));
         } else if (activeBtn === 'completed') {
-            setCurrentTasks(tasks.filter(task => task.status === true));
+            setCurrentTasks(tasks.filter(task => task.completed === true));
         } else {
             setCurrentTasks(tasks)
         }
@@ -92,20 +88,13 @@ const Todo = () => {
 
     useEffect(() => {
         if (activeBtn === 'active') {
-            setCurrentTasks(tasks.filter(task => task.status === false));
+            setCurrentTasks(tasks.filter(task => task.completed === false));
         } else if (activeBtn === 'completed') {
-            setCurrentTasks(tasks.filter(task => task.status === true));
+            setCurrentTasks(tasks.filter(task => task.completed === true));
         } else {
-            setCurrentTasks(tasks)
+            setCurrentTasks(tasks);
         }
     }, [activeBtn]);
-
-    useEffect(() => {
-        setActiveTaskCount(tasks.filter(task => !task.completed).length);
-        if (tasks.length !== 0) {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        };
-    }, [tasks]);
 
     useEffect(() => {
         axios.get('https://jsonplaceholder.typicode.com/todos')
@@ -137,8 +126,7 @@ const Todo = () => {
                                 name={task.title}
                                 handleStatusChange={handleStatusChange}
                                 taskId={task.id}
-                                status={task.status}
-                                setLastOperation={setLastOperation}
+                                status={task.completed}
                             />
 
                         )

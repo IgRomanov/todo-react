@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { deleteTask } from "../../store/slices/tasksSlice";
 import { useDispatch } from "react-redux";
-import { setTasks, changeTaskName } from "../../store/slices/tasksSlice";
-
-
+import { changeTaskName } from "../../store/slices/tasksSlice";
+import axios from "axios";
 
 const TodoElement = ({name, handleStatusChange, taskId, status}) => {
     const [isDisabled, setDisabled] = useState(true);
@@ -21,10 +20,10 @@ const TodoElement = ({name, handleStatusChange, taskId, status}) => {
     const handleSubmitChange = (e) => {
         e.preventDefault();
         axios.patch(`https://jsonplaceholder.typicode.com/todos/${taskId}`, {
-            title: !changedName
+            title: changedName
         })
             .then((res) => {
-                dispatch(changeTaskName({ id: taskId, taskName: changedName }));
+                dispatch(changeTaskName({ id: taskId, title: changedName }));
                 setDisabled(true);
             })
             .catch((err) => {
@@ -33,9 +32,7 @@ const TodoElement = ({name, handleStatusChange, taskId, status}) => {
     };
 
     const handleDeleteClick = () => {
-        axios.delete(`https://jsonplaceholder.typicode.com/todos/${taskId}`, {
-            title: !changedName
-        })
+        axios.delete(`https://jsonplaceholder.typicode.com/todos/${taskId}`)
             .then(() => {
                 dispatch(deleteTask(taskId));
             })

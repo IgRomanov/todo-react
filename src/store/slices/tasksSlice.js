@@ -33,7 +33,9 @@ export const tasksSlice = createSlice({
             state.value = state.value.filter(task => task.id !== action.payload);
         },
 
-    
+        deleteTasks: (state) => {
+            state.value = [];
+        },
 
     }
 });
