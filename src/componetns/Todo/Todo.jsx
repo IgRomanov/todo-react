@@ -65,17 +65,9 @@ const Todo = () => {
             setCurrentTasks(tasks)
         }
         localStorage.setItem('tasks', JSON.stringify(tasks));
-    }, [tasks]);
+    }, [tasks, activeBtn]);
 
-    useEffect(() => {
-        if (activeBtn === 'active') {
-            setCurrentTasks(tasks.filter(task => task.status === false));  
-        } else if (activeBtn === 'completed') {
-            setCurrentTasks(tasks.filter(task => task.status === true));  
-        } else {
-            setCurrentTasks(tasks)
-        }
-    }, [activeBtn])
+   
 
     return (
         <div className="todo">
