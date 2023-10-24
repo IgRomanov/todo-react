@@ -10,7 +10,7 @@ const Todo = () => {
     const [currentFilterStatus, setCurrentFilterStatus] = useState(false);
     const [taskName, setTaskName] = useState('');
     const [activeTaskCount, setActiveTaskCount] = useState(0);
-    const [activeBtn, setActiveBtn] = useState('');
+    const [activeBtn, setActiveBtn] = useState('all');
 
     //Появились ошибки после добавления локального хранилища (одинаковые id), поэтому добавил такую функцию, которая генерирует уникальные id
     const setId = (taskLength) => {                       
@@ -71,18 +71,8 @@ const Todo = () => {
 
     useEffect(() => {
         setActiveTaskCount(tasks.filter(task => !task.status).length);
-        if (tasks.length !== 0) {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        };
+        localStorage.setItem('tasks', JSON.stringify(tasks));
     }, [tasks]);
-
-    useEffect(() => {
-        setActiveBtn('all');
-        const localTasks = localStorage.getItem('tasks');
-        if (localTasks) {
-            dispatch(setTasks(JSON.parse(localTasks)));
-        };
-    }, []);
 
     return (
         <div className="todo">
