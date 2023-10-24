@@ -18,7 +18,6 @@ const TodoElement = ({name, handleStatusChange, taskId, status}) => {
     };
 
     const handleSubmitChange = (e) => {
-        setDisabled(true)
         e.preventDefault();
         dispatch(changeTaskName({id: taskId, taskName: changedName}));
         setDisabled(true);
