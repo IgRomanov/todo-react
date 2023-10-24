@@ -12,15 +12,6 @@ export const tasksSlice = createSlice({
         },
 
         changeTaskStatus: (state, action) => {
-            if (state.filtred.length > 0) {
-                state.filtred = state.filtred.filter((task) => {
-                    if (task.id === action.payload) {
-                        task.status = !task.status;
-                    }
-                    return task.id !== action.payload;
-                });
-            };
-
             state.value = state.value.map((task) => {
                 if (task.id === action.payload) {
                     task.status = !task.status;
@@ -29,16 +20,7 @@ export const tasksSlice = createSlice({
             })
         },
 
-        changeTaskName: (state, action) => {
-            if (state.filtred.length > 0) {
-                state.filtred = state.filtred.map((task) => {
-                    if (task.id === action.payload.id) {
-                        task.taskName = action.payload.taskName;
-                    }
-                    return task;
-                });
-            };
-            
+        changeTaskName: (state, action) => {       
             state.value = state.value.map((task) => {
                 if (task.id === action.payload.id) {
                     task.taskName = action.payload.taskName;
@@ -48,9 +30,6 @@ export const tasksSlice = createSlice({
         },
 
         deleteTask: (state, action) => {
-            if (state.filtred.length > 0) {
-                state.filtred = state.filtred.filter(task => task.id !== action.payload);
-            }
             state.value = state.value.filter(task => task.id !== action.payload);
         },
 
@@ -58,13 +37,6 @@ export const tasksSlice = createSlice({
             state.value = [];
         },
 
-        filterTaskByStatus: (state, action) => {
-            state.filtred = state.value.filter(task => task.status !== action.payload);
-        },
-
-        clearFiltredTasks: (state) => {
-            state.filtred = [];
-        }
     }
 });
 
@@ -72,8 +44,6 @@ export const {
     setTasks,
     deleteTasks, 
     deleteTask, 
-    filterTaskByStatus, 
-    clearFiltredTasks, 
     changeTaskStatus, 
     changeTaskName,
 } = tasksSlice.actions;

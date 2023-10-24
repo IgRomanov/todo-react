@@ -34,25 +34,24 @@ const TodoElement = ({name, handleStatusChange, taskId, status}) => {
 
     return (
         <div className="todo__list-element">
-            {status ? 
+            <div className="todo__list-container">
+                {status ? 
                 <>
-                    <div className="todo__list-container">
-                        <input className="todo__checkbox todo__checkbox_green" type="checkbox" defaultChecked={status} value={taskId} onChange={handleStatusChange}></input>
-                        <s className="todo__text-grey">{name}</s>
-                    </div>
-                    <button className="todo__btn-delete todo__btn_pointer" onClick={handleDeleteClick}></button>
+                    <input className="todo__checkbox todo__checkbox_green" type="checkbox" defaultChecked={status} value={taskId} onChange={handleStatusChange}></input>
+                    <s className="todo__text-grey">{name}</s>
+
                 </>
                 :
-                <>  
-                    <div className="todo__list-container">
-                        <input className="todo__checkbox" type="checkbox" defaultChecked={status} onChange={handleStatusChange} value={taskId}></input>
-                        <form className="form__field" onDoubleClick={handleChangeDisabled} onSubmit={handleSubmitChange} id="taskChange">
-                            <input className="task__name" spellCheck="false" onBlur={clearSubmitData} onChange={handleTaskChange} disabled={isDisabled} value={isDisabled ? name : changedName}></input>
-                        </form>
-                    </div>
-                    <button className="todo__btn-delete todo__btn_pointer" onClick={handleDeleteClick}></button>
+                <>
+                    <input className="todo__checkbox" type="checkbox" defaultChecked={status} onChange={handleStatusChange} value={taskId}></input>
+                    <form className="form__field" onDoubleClick={handleChangeDisabled} onSubmit={handleSubmitChange} id="taskChange">
+                        <input className="task__name" spellCheck="false" onBlur={clearSubmitData} onChange={handleTaskChange} disabled={isDisabled} value={isDisabled ? name : changedName}></input>
+                    </form>
                 </>
-            }
+                }
+                
+            </div>
+            <button className="todo__btn-delete todo__btn_pointer" onClick={handleDeleteClick}></button>
         </div>
     )
 }

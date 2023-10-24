@@ -1,78 +1,81 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
 import TodoElement from "../TodoElement/TodoElement";
 import { useDispatch, useSelector } from "react-redux";
-import { setTasks, changeTaskStatus, filterTaskByStatus, clearFiltredTasks, deleteTasks } from "../../store/slices/tasksSlice";
+import { setTasks, changeTaskStatus, deleteTasks } from "../../store/slices/tasksSlice";
+import { v4 as uuidv4 } from 'uuid';
 
 const Todo = () => {
     const tasks = useSelector((state) => state.tasks.value);
-    const filtredTasks = useSelector((state) => state.tasks.filtred);
     const dispatch = useDispatch();
-    const [currentFilterStatus, setCurrentFilterStatus] = useState(false);
     const [taskName, setTaskName] = useState('');
     const [activeTaskCount, setActiveTaskCount] = useState(0);
     const [activeBtn, setActiveBtn] = useState('all');
-
-    //Появились ошибки после добавления локального хранилища (одинаковые id), поэтому добавил такую функцию, которая генерирует уникальные id
-    const setId = (taskLength) => {                       
-        if (tasks.find(task => task.id === taskLength)) {
-            return setId(taskLength+1);
-        } else {
-            return taskLength;
-        }
-    };
+    const [currentTasks, setCurrentTasks] = useState(tasks);
     
     const handleTaskNameChange = (e) => {
         setTaskName(e.target.value);
     };
 
     const handleTaskSubmit = (e) => {
+        let currentId = uuidv4();
         e.preventDefault();
         if (taskName) {
-            dispatch(setTasks([...tasks, {taskName, id: setId(tasks.length), status: false}]));
+            dispatch(setTasks([...tasks, { taskName, id: currentId, status: false}]));
             setTaskName('');
+            setCurrentTasks([{ taskName, id: currentId, status: false }, ...currentTasks])
         }
     };
 
     const handleStatusChange = (e) => {
-        const id = Number(e.target.value);
+        const id = e.target.value;
         dispatch(changeTaskStatus(id));
-    };
-
-    const filterByStatus = (status) => {
-        setCurrentFilterStatus(true);
-        if (status) {
-            dispatch(filterTaskByStatus(false));
-        } else {
-            dispatch(filterTaskByStatus(true));
+        setCurrentTasks(tasks)
+        if (activeBtn === 'active') {
+            setCurrentTasks(currentTasks.filter(task => task.status === false));
+        } else if (activeBtn === 'completed') {
+            setCurrentTasks(currentTasks.filter(task => task.status === true));
         }
+     
     };
 
     const handleActiveClick = () => {
-        filterByStatus(false);
         setActiveBtn('active');
     };
 
     const handleCompletedClick = () => {
-        filterByStatus(true);
         setActiveBtn('completed');
     };
 
     const handleAllClick = () => {
         setActiveBtn('all');
-        setCurrentFilterStatus(false);
-        dispatch(clearFiltredTasks());
     };
 
     const handleDeleteAllClick = () => {
         dispatch(deleteTasks());
-        dispatch(clearFiltredTasks());
         localStorage.removeItem('tasks');
     }
 
     useEffect(() => {
         setActiveTaskCount(tasks.filter(task => !task.status).length);
+        if (activeBtn === 'active') {
+            setCurrentTasks(tasks.filter(task => task.status === false));
+        } else if (activeBtn === 'completed') {
+            setCurrentTasks(tasks.filter(task => task.status === true));
+        } else {
+            setCurrentTasks(tasks)
+        }
         localStorage.setItem('tasks', JSON.stringify(tasks));
     }, [tasks]);
+
+    useEffect(() => {
+        if (activeBtn === 'active') {
+            setCurrentTasks(tasks.filter(task => task.status === false));  
+        } else if (activeBtn === 'completed') {
+            setCurrentTasks(tasks.filter(task => task.status === true));  
+        } else {
+            setCurrentTasks(tasks)
+        }
+    }, [activeBtn])
 
     return (
         <div className="todo">
@@ -87,7 +90,7 @@ const Todo = () => {
                 <div className="todo__list">
                     { 
                 
-                        (currentFilterStatus ? filtredTasks : tasks).map(task =>
+                        (activeBtn !== 'all' ? currentTasks : tasks).map(task =>
                             <TodoElement 
                                 key={task.id} 
                                 name={task.taskName} 
