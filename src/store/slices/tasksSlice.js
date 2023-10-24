@@ -14,7 +14,7 @@ export const tasksSlice = createSlice({
         changeTaskStatus: (state, action) => {
             state.value = state.value.map((task) => {
                 if (task.id === action.payload) {
-                    task.status = !task.status;
+                    task.completed = !task.completed;
                 }
                 return task;
             })

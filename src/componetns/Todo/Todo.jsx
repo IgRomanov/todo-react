@@ -84,17 +84,7 @@ const Todo = () => {
             setCurrentTasks(tasks)
         }
         localStorage.setItem('tasks', JSON.stringify(tasks));
-    }, [tasks]);
-
-    useEffect(() => {
-        if (activeBtn === 'active') {
-            setCurrentTasks(tasks.filter(task => task.completed === false));
-        } else if (activeBtn === 'completed') {
-            setCurrentTasks(tasks.filter(task => task.completed === true));
-        } else {
-            setCurrentTasks(tasks);
-        }
-    }, [activeBtn]);
+    }, [tasks, activeBtn]);
 
     useEffect(() => {
         axios.get('https://jsonplaceholder.typicode.com/todos')
@@ -104,7 +94,6 @@ const Todo = () => {
         .catch((err) => {
             console.log(err);
         });
-        
     }, []);
     
     return (
