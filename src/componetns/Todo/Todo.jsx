@@ -87,13 +87,17 @@ const Todo = () => {
     }, [tasks, activeBtn]);
 
     useEffect(() => {
-        axios.get('https://jsonplaceholder.typicode.com/todos')
-        .then((res) => {
-            dispatch(setTasks(res.data));
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+        const data = JSON.parse(localStorage.getItem('tasks'));
+        if (data.length === 0) {
+            axios.get('https://jsonplaceholder.typicode.com/todos')
+                .then((res) => {
+                    dispatch(setTasks(res.data));
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+
     }, []);
     
     return (
