@@ -23,7 +23,7 @@ export const tasksSlice = createSlice({
         changeTaskName: (state, action) => {
             state.value = state.value.map((task) => {
                 if (task.id === action.payload.id) {
-                    task.title = action.payload.taskName;
+                    task.title = action.payload.title;
                 }
                 return task;
             })
